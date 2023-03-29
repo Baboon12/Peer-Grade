@@ -238,6 +238,8 @@ def cur_class(request, class_id):
         #     'notice': notice,
         # }
         # return render(request, 'courses/cur_class.html', context)
+
+        
         
         current = CreatedClasses.objects.get(pk=class_id)
         all_classes = CreatedClasses.objects.filter(
@@ -253,7 +255,19 @@ def cur_class(request, class_id):
                 notice.append(n)
         total_students = len(
             JoinedClasses.objects.filter(class_id=current)) - 1
+        
+        students = JoinedClasses.objects.filter(class_id=current).values('student')
+        students_list = [User.objects.get(id=c['student'])
+                         for i, c in enumerate(students)]
+        #print(students_list)
+        teachers = [cl.teacher for cl in all_classes]
+        teachers_list = [User.objects.get(username=c)
+                         for i, c in enumerate(teachers)]
+
+
         context = {
+            'students': students_list,
+            'teachers': teachers_list,
             'total_students': total_students,
             'cur_class': current,
             'assignments': assignments,

@@ -87,7 +87,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "peer",
+        'NAME': "peergrade",
         'USER': "root",
         'PASSWORD': "root",
         'HOST': "127.0.0.1",
