@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'courses',
     'crispy_forms',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -84,27 +84,27 @@ WSGI_APPLICATION = 'peergrade.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': "peergrade",
+#         'USER': "root",
+#         'PASSWORD': "root",
+#         'HOST': "127.0.0.1",
+#         'PORT': "3306"
+#     }
+# }
+#https://accounts.google.com/signin/oauth/error/v2?authError=Cg9pbnZhbGlkX3JlcXVlc3QSKE1pc3NpbmcgcmVxdWlyZWQgcGFyYW1ldGVyOiByZWRpcmVjdF91cmkaN2h0dHBzOi8vZGV2ZWxvcGVycy5nb29nbGUuY29tL2lkZW50aXR5L3Byb3RvY29scy9vYXV0aDIgkAM%3D&client_id
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "peergrade",
         'USER': "root",
-        'PASSWORD': "root",
+        'PASSWORD': 'root',
         'HOST': "127.0.0.1",
         'PORT': "3306"
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': "ppergradeview-system",
-#         'USER': "postgres",
-#         'PASSWORD': '0000',
-#         'HOST': "localhost",
-#         'PORT': "5432"
-#     }
-# }
 
 AUTHENTICATION_BACKENDS = [
 
@@ -179,3 +179,26 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'peergrade123@gmail.com'
 EMAIL_HOST_PASSWORD = 'Eby12kd54@#'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+
+GOOGLE_CLIENT_ID = '809279444249-p85eirnjbfsrlgd490cuev0i7nttcjtt.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = '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'
+GOOGLE_AUTH_REDIRECT_URI = 'http://localhost:8000/google-auth-redirect/'
+
+# clientid : 809279444249-p85eirnjbfsrlgd490cuev0i7nttcjtt.apps.googleusercontent.com
+
+# secret: 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
+
+
+# class code 7KGFIT, YKB65P

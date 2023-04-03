@@ -26,7 +26,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('courses.urls')),
-    path('accounts/', include('allauth.urls')),
+    path('', include('allauth.urls')),
     path('password-reset/', auth_views.PasswordResetView.as_view(
         template_name='courses/password_reset.html'), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(
@@ -37,7 +37,7 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(
         template_name='courses/password_reset_complete.html'), name="password_reset_complete"),
-    path('accounts/', include('allauth.urls')),
+    path('', include('allauth.urls')),
     # path('', include('render.urls'))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

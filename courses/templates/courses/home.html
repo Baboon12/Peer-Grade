@@ -1,4 +1,4 @@
-<!--Edited file by Hussein/Nayan--->
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -221,7 +221,8 @@
 
 <body style="overflow: visible;">
   <div class="wrapper">
-    {% include "courses/sidebar.html" with created=classes joined=joined %}
+    
+    {% include "courses/sidebar.html" with created=created joined=joined %}
     <div id="content">
       <header>
         <!-- Header Start -->
@@ -231,7 +232,11 @@
               <div class="container">
                 <div class="col-xl-12">
                   <div class="row d-flex justify-content-between align-items-center">
+                    <i class="fa fa-bars sidebarCollapse" style="margin-right: 20px; font-size: 20px; color:black"></i>
+
                     <div class="header-info-left">
+                    
+
                       <ul>
                         {% if user.is_authenticated %}
                         <li>{{user.username}}</li>
@@ -266,7 +271,7 @@
 
                   <div class="logo logo2 ">
 
-                    <i class="fa fa-bars sidebarCollapse" style="margin-right: 20px; font-size: 20px; color:black"></i>
+               
 
 
                     <a href="{% url 'index' %}"><img src="{% static 'assets/img/logo/peergrade.png' %}"

@@ -5,6 +5,7 @@ from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('nav/',views.nav, name="nav"),
 
     path('', views.joinclass, name="index"),
     path('login/', auth_views.LoginView.as_view(template_name='courses/login.html'), name='login'),
@@ -44,7 +45,8 @@ urlpatterns = [
 
     path('view_feedback/<assignment_id>',
          views.view_feedback, name='view_feedback'),
-    path('accounts/', include('allauth.urls')),
+    path('', include('allauth.urls')),
+    path('nav',views.nav)
 
 
 ]

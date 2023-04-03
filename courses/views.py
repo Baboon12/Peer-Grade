@@ -1,7 +1,7 @@
 from ntpath import join
 from django.shortcuts import render, redirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
-from numpy import average
+#from numpy import average
 from pkg_resources import EntryPoint
 from .forms import UserRegisterForm
 from .models import *
@@ -13,6 +13,7 @@ import random
 from datetime import datetime
 from django.forms.models import model_to_dict
 import csv
+from django.conf import settings
 
 
 # Create your views here.
@@ -38,27 +39,10 @@ def index(request):
 
 
 def about(request):
-    context = {
-        'title': 'Peer2Peer-Grading: About',
-    }
-    return render(request, 'courses/about.html', context)
-
-
-def contact(request):
-    context = {
-        'title': 'Peer2Peer-Grading: Contact Us'
-    }
-    return render(request, 'courses/contact.html', context)
-
-
-def courses(request):
-    context = {}
-    return render(request, 'courses/courses.html', context)
-
-
-@login_required
-def home(request):
+    
     current_user = request.user
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
     if request.POST:
         if request.POST['del_class'] != '-1':
             del_class = request.POST['del_class']
@@ -76,19 +60,67 @@ def home(request):
                 obj.save()
             else:
                 pass
-    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    context = {
+        'classes': all_classes,
+        'joined':joined_classes,
+        'title': 'Peer2Peer-Grading: About',
+    }
+    return render(request, 'courses/about.html', context)
 
+
+def contact(request):
+    current_user = request.user
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
     joined_classes = JoinedClasses.objects.filter(student=current_user)
+    context = {
+        'classes': all_classes,
+        'joined':joined_classes,
+        'title': 'Peer2Peer-Grading: Contact Us'
+    }
+    return render(request, 'courses/contact.html', context)
+
+
+def courses(request):
+    context = {}
+    return render(request, 'courses/courses.html', context)
+
+
+@login_required
+def home(request):
+    current_user = request.user
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
+    if request.POST:
+        if request.POST['del_class'] != '-1':
+            del_class = request.POST['del_class']
+            dobj = CreatedClasses.objects.get(pk=del_class)
+            dobj.delete()
+        else:
+            cur_user = request.user
+            data = request.POST
+            classname = data['classname']
+            description = data['desc']
+            classcode = data['code']
+            if CreatedClasses.objects.filter(class_code=classcode).first() is None:
+                obj = CreatedClasses(
+                    class_name=classname, class_description=description, class_code=classcode, teacher=cur_user)
+                obj.save()
+            else:
+                pass
 
     context = {
         'classes': all_classes,
         'joined': joined_classes,
+        'google_client_id': settings.GOOGLE_CLIENT_ID,
+        'google_client_secret': settings.GOOGLE_CLIENT_SECRET
     }
     return render(request, 'courses/home.html', context)
 
 
 @login_required
 def cur_class(request, class_id):
+    
+    current_user = request.user
     if CreatedClasses.objects.filter(pk=class_id).filter(teacher=request.user).first() is None:
         return render(request, 'courses/access_denied.html')
     else:
@@ -241,9 +273,9 @@ def cur_class(request, class_id):
 
         
         
-        current = CreatedClasses.objects.get(pk=class_id)
+        current_class = CreatedClasses.objects.get(pk=class_id)
         all_classes = CreatedClasses.objects.filter(
-            class_code=current.class_code)
+            class_code=current_class.class_code)
         assignments = []
         notice = []
         for cl in all_classes:
@@ -254,9 +286,9 @@ def cur_class(request, class_id):
             for n in all_notices:
                 notice.append(n)
         total_students = len(
-            JoinedClasses.objects.filter(class_id=current)) - 1
+            JoinedClasses.objects.filter(class_id=current_class)) - 1
         
-        students = JoinedClasses.objects.filter(class_id=current).values('student')
+        students = JoinedClasses.objects.filter(class_id=current_class).values('student')
         students_list = [User.objects.get(id=c['student'])
                          for i, c in enumerate(students)]
         #print(students_list)
@@ -264,15 +296,19 @@ def cur_class(request, class_id):
         teachers_list = [User.objects.get(username=c)
                          for i, c in enumerate(teachers)]
 
+        all_classes = CreatedClasses.objects.filter(teacher=current_user)
+        joined_classes = JoinedClasses.objects.filter(student=current_user)
 
         context = {
             'students': students_list,
             'teachers': teachers_list,
             'total_students': total_students,
-            'cur_class': current,
+            'cur_class': current_class,
             'assignments': assignments,
             'class_id': class_id,
             'notice': notice,
+            'classes': all_classes,
+            'joined':joined_classes
         }
         return render(request, 'courses/cur_class.html', context)
 
@@ -324,9 +360,46 @@ def assign_peers(request, class_id, assignment_id):
     return render(request, 'courses/assign_peers.html', context)
 
 
+def nav(request):
+    current_user = request.user
+    if request.POST:
+        if request.POST['del_class'] != '-1':
+            del_class = request.POST['del_class']
+            dobj = CreatedClasses.objects.get(pk=del_class)
+            dobj.delete()
+        else:
+            cur_user = request.user
+            data = request.POST
+            classname = data['classname']
+            description = data['desc']
+            classcode = data['code']
+            if CreatedClasses.objects.filter(class_code=classcode).first() is None:
+                obj = CreatedClasses(
+                    class_name=classname, class_description=description, class_code=classcode, teacher=cur_user)
+                obj.save()
+            else:
+                pass
+    
+    all_classes = JoinedClasses.objects.filter(student=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
+    context = {
+        'classes': all_classes,
+        'joined':joined_classes,
+    }
+    return render(request, 'courses/nav.html',context)
+    
+
+
 @login_required
 def joinclass(request):
     current_user = request.user
+    
+    #class_id = request.POST.get('class_id')
+    #current_class = CreatedClasses.objects.get(pk=class_id)
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
+    
+
     if request.POST:
         if request.POST['l_class'] != "-1":
             current_class = CreatedClasses.objects.get(
@@ -351,23 +424,28 @@ def joinclass(request):
                 else:
                     messages.success(
                         request, f'Class not found/Class code is incorrect!')
-
-    all_classes = JoinedClasses.objects.filter(student=current_user)
+    
+    
+    
     context = {
         'classes': all_classes,
+        'joined':joined_classes
     }
-    return render(request, 'courses/joinclasses.html', context)
+    return render(request, 'courses/joinclasses.html',context)
 
 
 @login_required
 def join_cur_class(request, class_id):
+    current_user = request.user
     current_class = CreatedClasses.objects.get(pk=class_id)
     if JoinedClasses.objects.filter(class_id=current_class).filter(student=request.user).first() is not None:
         # created_class = CreatedClasses.objects.filter(class_code=current_class.class_code)
         all_classes = CreatedClasses.objects.filter(
             class_code=current_class.class_code)
+        # joined_classes = JoinedClasses.objects.filter(class_code=current_class.class_code)
         assignments = []
         notice = []
+        classes = []
         for cl in all_classes:
             all_assignments = Assignments.objects.filter(class_id=cl)
             for a in all_assignments:
@@ -375,25 +453,88 @@ def join_cur_class(request, class_id):
             all_notices = notices.objects.filter(class_id=cl)
             for n in all_notices:
                 notice.append(n)
+        # for cl in joined_classes:
+        #     all_joined_classes = JoinedClasses.filter(class_id=cl)
+        #     for a in all_joined_classes:
+        #         classes.append(a)
+        total_students = len(
+            JoinedClasses.objects.filter(class_id=current_class)) - 1
+        
+        students = JoinedClasses.objects.filter(class_id=current_class).values('student')
+        students_list = [User.objects.get(id=c['student'])
+                         for i, c in enumerate(students)]
+        #print(students_list)
+        teachers = [cl.teacher for cl in all_classes]
+        teachers_list = [User.objects.get(username=c)
+                         for i, c in enumerate(teachers)]
+        all_classes = CreatedClasses.objects.filter(teacher=current_user)
+        joined_classes = JoinedClasses.objects.filter(student=current_user)
         context = {
             'cur_class': current_class,
             'assignments': assignments,
             'class_id': class_id,
             "notice": notice,
+            'classes': all_classes,
+            'joined':joined_classes,
+            'students':students_list,
+            'teachers':teachers_list,
+            'total_students':total_students
+            
+            # "joined":classes
         }
+
+        
+
+
 
         return render(request, 'courses/join_cur_class.html', context)
     else:
         return render(request, 'courses/access_denied.html')
+# def join_cur_class(request, class_id):
+#     current_class = CreatedClasses.objects.get(pk=class_id)
+#     if JoinedClasses.objects.filter(class_id=current_class).filter(student=request.user).first() is not None:
+#         # created_class = CreatedClasses.objects.filter(class_code=current_class.class_code)
+#         all_classes = CreatedClasses.objects.filter(
+#             class_code=current_class.class_code)
+#         joined_classes = JoinedClasses.objects.filter(student=current_user)
+#         print(all_classes)
+#         assignments = []
+#         notice = []
+
+#         for cl in all_classes:
+#             all_assignments = Assignments.objects.filter(class_id=cl)
+#             for a in all_assignments:
+#                 assignments.append(a)
+#             all_notices = notices.objects.filter(class_id=cl)
+#             for n in all_notices:
+#                 notice.append(n)
+#             #for n in join_cur_class
+
+        
+#         context = {
+#             'cur_class': current_class,
+#             'assignments': assignments,
+#             'class_id': class_id,
+#             "notice": notice,
+#             "joined": joined_classes
+#         }
+
+        
+
+#         return render(request, 'courses/join_cur_class.html', context)
+#     else:
+#         return render(request, 'courses/access_denied.html')
 
 
 @login_required
 def cur_assignment_join(request, assignment_id):
+    current_user = request.user
     context = {}
     embed_url = ""
     embd_url = ""
     edit = False
-
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
     if request.POST:
         # if request.POST.get('youtube_link', False):
         #     values = request.POST['youtube_link']
@@ -586,6 +727,9 @@ def cur_assignment_join(request, assignment_id):
                         'count': count,
                         'no_peers': no_peers,
                         'edit': edit,
+                                
+                        'classes': all_classes,
+                        'joined':joined_classes
                     }
                 else:
                     teacher_marks = None
@@ -604,6 +748,9 @@ def cur_assignment_join(request, assignment_id):
                         'tt_marks': current_assignment.points,
                         'comments': comments,
                         'edit': edit,
+                                
+                        'classes': all_classes,
+                        'joined':joined_classes
                     }
             else:
                 marks = "No peergrading"
@@ -616,7 +763,10 @@ def cur_assignment_join(request, assignment_id):
                     'marks': marks,
                     'comments': comments,
                     'edit': edit,
+                    'classes': all_classes,
+                    'joined':joined_classes
                 }
+            
             return render(request, 'courses/cur_assignment_join.html', context)
         else:
             return render(request, 'courses/access_denied.html')
@@ -1053,9 +1203,21 @@ def cur_assignment_gradesheet(request, assignment_id):
     else:
         return render(request, "courses/access_denied.html")
 
+@login_required
+def nav(request):
+    current_user=request.user
+    all_classes = JoinedClasses.objects.filter(student=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
+    context = {
+        'classes': all_classes,
+        'joined':joined_classes
+    }
+    return render(request, 'courses/nav.html', context)
+
 
 @login_required
 def cur_assignment_create(request, assignment_id):
+    current_user = request.user
     current_assignment = Assignments.objects.get(pk=assignment_id)
     created_class = CreatedClasses.objects.filter(
         pk=current_assignment.class_id.pk).first()
@@ -1089,12 +1251,15 @@ def cur_assignment_create(request, assignment_id):
         current = None
         for c in all_class:
             current = c
-
+        all_classes = CreatedClasses.objects.filter(teacher=current_user)
+        joined_classes = JoinedClasses.objects.filter(student=current_user)
         context = {
             'assignment': current_assignment,
             'submissions': submission_list,
             'assignment_id': assignment_id,
             'teacher_ratio': teacher_ratio,
+            'classes': all_classes,
+            'joined':joined_classes
         }
         return render(request, 'courses/create_cur_assignment.html', context)
     else:
@@ -1334,6 +1499,8 @@ def peers_assigned(request, assignment_id):
 
 
 def cur_notice(request, notice_id):
+    
+    current_user = request.user
     # notice = notices.objects.get(pk=notice_id)
 
     # file = noticeFile.objects.filter(notice_id=notice)
@@ -1346,12 +1513,15 @@ def cur_notice(request, notice_id):
     # }
 
     # return render(request, 'courses/cur_notice.html', context)
-    
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
     notice = notices.objects.get(pk=notice_id)
     files = noticeFile.objects.filter(notice_id=notice)
     context = {
         'files': files,
-        'notice': notice,
+        'notices': notice,
+        'classes': all_classes,
+        'joined':joined_classes
     }
 
     return render(request, 'courses/cur_notice.html', context)
