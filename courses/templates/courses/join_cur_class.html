@@ -647,6 +647,7 @@
           <div class="tab-content" id="myTabContent" style="margin: 0 auto;">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               {% include "courses/tabs/classwork_student.html" with assignments=assignments %}
+              
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
               {% include "courses/tabs/people.html" with students=students teachers=teachers %}
@@ -656,10 +657,10 @@
             </div>
           </div>
         </div>
-        <div class="categories-area" style="padding-top: 25px;">
-          <div class="container">
-            <div class="row row-content">
-              <div class="col-md-12 col-sm-12" style="padding: 0px 0px;">
+        <!--<div class="categories-area" style="padding-top: 25px;">-->
+        <!--  <div class="container">-->
+        <!--    <div class="row row-content">-->
+        <!--      <div class="col-md-12 col-sm-12" style="padding: 0px 0px;">-->
                 <!-- {% for a in assignments %}
                 <div class="single-cat float-left"
                   style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px">
@@ -680,9 +681,9 @@
                     </button>
                     {% endif %} -->
                 <!-- <a href="{% url 'cur_assignment_create' a.pk %}" class="read-more1"><span>Peers <i class="fa fa-graduation-cap"></i></span></a> -->
-              </div>
-            </div>
-            {% endfor %}
+              <!--</div>-->
+            <!--</div>-->
+            <!--{% endfor %}-->
   
             <!-- {% for n in notice %}
                 <div class="single-cat float-left"
@@ -697,50 +698,50 @@
                   </div>
                 </div>
                 {% endfor %} -->
-          </div>
-        </div>
-        <!-- <div class="categories-area" style="padding-top: 25px;">
-          <div class="container">
-            <div class="row row-content">
-              <div class="col-md-12 col-sm-12" style="padding: 0px 0px;">
-                {% for a in assignments %}
-                <div class="single-cat float-left"
-                  style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px;word-wrap: break-word;">
-                  <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_assignment_join' a.pk %}">
-                      <span class="flaticon-web-design"></span></a>
-                  </div>
-                  <div style="text-align: center;" class="cat-cap">
-                    <h5 style="text-transform: uppercase; text-decoration: underline;" class="size"><a
-                        href="{% url 'cur_assignment_join' a.pk %}">{{a.assignment_name}}</a></h5>
-                    <p style="margin-bottom: 17px;">Max Points: {{a.points}}</p>
-                    <p style="margin-bottom: 15px;">Due: {{a.due_date}}</p>
-                    {% if a.grading_type is False %}
-                    <button style="border: none;outline: none;">
-                      <a style="border-bottom: 1px solid" id="review-peers" href="{% url 'peers_assigned' a.pk %}"
-                        class="read-more1"><span>To Review Peers <i class="fa fa-graduation-cap"></i>>></span></a>
-                    </button>
-                    {% endif %}
-                  </div>
-                </div>
-                {% endfor %}
+        <!--  </div>-->
+        <!--</div>-->
+        <!--<div class="categories-area" style="padding-top: 25px;">-->
+        <!--  <div class="container">-->
+        <!--    <div class="row row-content">-->
+        <!--      <div class="col-md-12 col-sm-12" style="padding: 0px 0px;">-->
+        <!--        {% for a in assignments %}-->
+        <!--        <div class="single-cat float-left"-->
+        <!--          style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px;word-wrap: break-word;">-->
+        <!--          <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_assignment_join' a.pk %}">-->
+        <!--              <span class="flaticon-web-design"></span></a>-->
+        <!--          </div>-->
+        <!--          <div style="text-align: center;" class="cat-cap">-->
+        <!--            <h5 style="text-transform: uppercase; text-decoration: underline;" class="size"><a-->
+        <!--                href="{% url 'cur_assignment_join' a.pk %}">{{a.assignment_name}}</a></h5>-->
+        <!--            <p style="margin-bottom: 17px;">Max Points: {{a.points}}</p>-->
+        <!--            <p style="margin-bottom: 15px;">Due: {{a.due_date}}</p>-->
+        <!--            {% if a.grading_type is False %}-->
+        <!--            <button style="border: none;outline: none;">-->
+        <!--              <a style="border-bottom: 1px solid" id="review-peers" href="{% url 'peers_assigned' a.pk %}"-->
+        <!--                class="read-more1"><span>To Review Peers <i class="fa fa-graduation-cap"></i>>></span></a>-->
+        <!--            </button>-->
+        <!--            {% endif %}-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--        {% endfor %}-->
 
-                {% for n in notice %}
-                <div class="single-cat float-left"
-                  style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px">
-                  <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_notice' n.pk %}">
-                      <span class="flaticon-web-design"></span></a>
-                  </div>
-                  <div style="text-align: center;" class="cat-cap">
-                    <h5 style="text-transform: uppercase; text-decoration: underline;"><a
-                        href="{% url 'cur_notice' n.pk %}">{{n.notice_name}}</a></h5>
-                    <p style="margin-bottom: 15px;">Posted On: {{n.created_on}}</p>
-                  </div>
-                </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div> -->
+                <!--{% for n in notice %}-->
+                <!--<div class="single-cat float-left"-->
+                <!--  style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px">-->
+                <!--  <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_notice' n.pk %}">-->
+                <!--      <span class="flaticon-web-design"></span></a>-->
+                <!--  </div>-->
+                <!--  <div style="text-align: center;" class="cat-cap">-->
+                <!--    <h5 style="text-transform: uppercase; text-decoration: underline;"><a-->
+                <!--        href="{% url 'cur_notice' n.pk %}">{{n.notice_name}}</a></h5>-->
+                <!--    <p style="margin-bottom: 15px;">Posted On: {{n.created_on}}</p>-->
+                <!--  </div>-->
+                <!--</div>-->
+                <!--{% endfor %}-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div> -->
       </div>
     </section>
   </main>
@@ -792,7 +793,7 @@
 <footer>
   <div class="footer-area footer-bg">
     <div class="container">
-      <div class="footer-top py-5">
+      <div class="footer-top">
         <div class="footer-heading">
           <h4 style="color: white; padding: 10px 0; text-align: center;">Connect Us</h4>
           <div class="footer-social py-2" style="text-align: center;">

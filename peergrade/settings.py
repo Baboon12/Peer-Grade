@@ -26,8 +26,9 @@ SECRET_KEY = 'postgres://distributed_peer_review_user:vCReSjAXMdc5agpgpqkew4SqVb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
-# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["vasanifamily.co.in","classroom.vasanifamily.co.in"]
+
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -97,12 +98,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 #https://accounts.google.com/signin/oauth/error/v2?authError=Cg9pbnZhbGlkX3JlcXVlc3QSKE1pc3NpbmcgcmVxdWlyZWQgcGFyYW1ldGVyOiByZWRpcmVjdF91cmkaN2h0dHBzOi8vZGV2ZWxvcGVycy5nb29nbGUuY29tL2lkZW50aXR5L3Byb3RvY29scy9vYXV0aDIgkAM%3D&client_id
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "peergrade",
-        'USER': "root",
-        'PASSWORD': 'root',
-        'HOST': "127.0.0.1",
-        'PORT': "3306"
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': "biskplff_hostpeer",
+        # 'USER': "biskplff_admin",
+        # 'PASSWORD': 'Somaiya@890',
+        # 'HOST': "localhost",
+        # 'PORT': "5432"
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "peer_grade",
+        'USER': "postgres",
+        'PASSWORD': 'test',
+        'HOST': "localhost",
+        'PORT': "5432"
     }
 }
 
@@ -170,7 +177,7 @@ LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 ACCOUNT_EMAIL_REQUIRED = True
-SITE_ID = 2
+SITE_ID = 1
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -192,8 +199,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-GOOGLE_CLIENT_ID = '809279444249-p85eirnjbfsrlgd490cuev0i7nttcjtt.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET = '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'
+SOCIALACCOUNT_LOGIN_ON_GET=True
+GOOGLE_CLIENT_ID = '274369527483-vltpckfcbv0aen8mks7oilcem808qf8c.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = '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'
 GOOGLE_AUTH_REDIRECT_URI = 'http://localhost:8000/google-auth-redirect/'
 
 # clientid : 809279444249-p85eirnjbfsrlgd490cuev0i7nttcjtt.apps.googleusercontent.com

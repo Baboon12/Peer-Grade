@@ -13,7 +13,7 @@
     {% for a in assignments %}
     <li>
         <a href="{% url 'cur_assignment_join' a.pk %}">
-            <div style="display: flex; align-items: center;justify-content: space-between; padding: 5px;">
+            <div style="display: flex; align-items: center;justify-content: space-between; padding: 3px;">
                 <div style="display: flex; align-items: center;justify-content: center;">
                     <div style="  display: inline-block;
                     vertical-align: middle; 
@@ -23,20 +23,25 @@
                     border-radius: 50%;
                     height: 48px;
                     width: 48px;
-                    margin-right: 20px;">
+                    margin-right: 10px;">
                         <div class="avatar__letters">
                             <!-- The letters -->
                             <i class="fa-solid fa-book-open"></i>
                         </div>
                     </div>
                     <h5>{{a.assignment_name}}</h5>
-
+                    <!--<a href="{% url 'peers_assigned' a.pk %}" style="margin: 0; padding: 0;">Peer</a>-->
                 </div>
-                <h5 style="padding-left: 50px;"> {{a.points}} points</h5>
-
-                <h6 style="padding-left: 50px; color: gray;">Due {{a.due_date}}</h6>
+            </a>
+                <h5 style="padding-left: 20px;"> {{a.points}} mks</h5>
+                <h5 style="padding-left: 20px;"><a id="review-peers" href="{% url 'peers_assigned' a.pk %}"
+                        class="read-more1">Peer Review</a>
+</h5>
+                <h6 style="padding-left: 20px; color: gray;">Due {{a.due_date}}</h6>
+                
+                
             </div>
-        </a>
+        
     </li>
     {% empty %}
     <div class="not-found">

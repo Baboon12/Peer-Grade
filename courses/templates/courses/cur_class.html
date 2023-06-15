@@ -507,7 +507,7 @@
             <div class="head-title d-flex align-items-center justify-content-between my-2">
               <h4 style="font-size: 50px" class="text-black">{{ cur_class.class_name }}</h4>
               <h6 style="font-size: 20px" class="text-black">{{ cur_class.class_description }}</h6>
-              <div>
+              <!-- <div>
                 <form method="post">
                   {% csrf_token %}
                   <input type="text" placeholder="Enter Student Username" name="student_username">
@@ -522,7 +522,7 @@
                   <input type="hidden" name="nname" value="addteacher">
                   <button type="submit" style="background-color: rgb(43, 41, 41);">Add Teacher</button>
                 </form>
-              </div>
+              </div> -->
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -562,7 +562,7 @@
               <input type="hidden" name="del_class" value="{{cur_class.pk}}">
               <button style="border-radius: 12.5px;  width: 100%; height: auto;" type="submit" class="btn btn-danger text-white font-weight-bold">Delete Class</button>
             </form>
-          </div>-->
+            </div>-->
             </div>
             <!-- <div id="button-wrapper">
           <button id="table-toggle" class="btn btn-secondary " type="button" style="margin: 40px auto;"
@@ -570,7 +570,8 @@
             Show students
           </button>
         </div> -->
-            <div id="table-container" style="display: none;">
+            <!-- Not found comment -->
+            <!-- <div id="table-container" style="display: none;">
               <table class="content-table" style="margin: 40px auto">
                 <thead>
                   <tr>
@@ -587,22 +588,22 @@
                   {% endfor %}
                 </tbody>
               </table>
-            </div>
-            <div>
+            </div> -->
+            <!-- <div>
               {% if messages %}
               {% for message in messages %}
               {{message}}
               {% endfor %}
               {% endif %}
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
         </section>
       </main>
 
       <hr>
 
 
-      <div id="create1" class="login-box" style="visibility: hidden; z-index: 100; background-color:black;">
+      <div id="create1" class="login-box" style="visibility: hidden; z-index: 100; background-color:#6560ab;">
         <h2>Peer Graded Assignment</h2>
         <form method="post" action="{% url 'cur_class' class_id %}">
           {% csrf_token %}
@@ -616,7 +617,7 @@
             <input type="number" name="points" autocomplete="off" min="0" max="100" required>
             <label>Points</label>
           </div>
-          <label style="color: white">Due Date:</label>
+          <label style="color: white !important;">Due Date:</label>
           <div></div>
           <div class="user-box">
             <input type="datetime-local" name="due" autocomplete="off" required>
@@ -636,7 +637,7 @@
         </form>
       </div>
 
-      <div id="create2" class="login-box" style="visibility: hidden; z-index: 100;">
+      <div id="create2" class="login-box" style="visibility: hidden; z-index: 100; background-color:#6560ab;">
         <h2>Teacher Graded Assignment</h2>
         <form method="post" action="{% url 'cur_class' class_id %}">
           {% csrf_token %}
@@ -650,8 +651,10 @@
             <input type="number" name="points" autocomplete="off" min="0" max="100" required>
             <label>Points</label>
           </div>
-          <label>Due Date:</label>
-          <div></div>
+
+          <div>
+            <label>Due Date:</label>
+          </div>
           <div class="user-box">
             <input type="datetime-local" name="due" autocomplete="off" required>
           </div>
@@ -662,7 +665,9 @@
         </form>
       </div>
 
-      <div id="createnotice" class="login-box" style="visibility: hidden; z-index: 100; ">
+
+
+      <div id="createnotice" class="login-box" style="visibility: hidden; z-index: 100;  background-color:#6560ab;">
         <h2>Upload Notice</h2>
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
@@ -681,7 +686,6 @@
           </div>
         </form>
       </div>
-
 
       <div style="border-bottom: 1px solid; margin: 20px 0px"></div>
       <div style="display: flex; align-items: center; justify-content: center" class="project-tab">
@@ -704,7 +708,7 @@
       <div class="container" style="width: 70%;">
         <div class="tab-content" id="myTabContent" style="margin: 0 auto;">
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            {% include "courses/tabs/classwork_student.html" with assignments=assignments %}
+            {% include "courses/tabs/classwork.html" with assignments=assignments %}
           </div>
           <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             {% include "courses/tabs/people.html" with students=students teachers=teachers %}
@@ -719,7 +723,7 @@
         <div class="container">
           <div class="row row-content">
             <div class="col-md-12 col-sm-12" style="padding: 0px 0px;">
-              <!-- {% for a in assignments %}
+              {% for a in assignments %}
               <div class="single-cat float-left"
                 style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px">
                 <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_assignment_create' a.pk %}">
@@ -737,179 +741,190 @@
                       href="{% url 'assign_peers' a.pk class_id %}">Assign
                       Peers</a>
                   </button>
-                  {% endif %} -->
-              <!-- <a href="{% url 'cur_assignment_create' a.pk %}" class="read-more1"><span>Peers <i class="fa fa-graduation-cap"></i></span></a> -->
-            </div>
-          </div>
-          {% endfor %}
-
-          <!-- {% for n in notice %}
-              <div class="single-cat float-left"
-                style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px">
-                <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_notice' n.pk %}">
-                    <span class="flaticon-web-design"></span></a>
-                </div>
-                <div style="text-align: center;" class="cat-cap">
-                  <h5 style="text-transform: uppercase; text-decoration: underline;"><a
-                      href="{% url 'cur_notice' n.pk %}">{{n.notice_name}}</a></h5>
-                  <p style="margin-bottom: 15px;">Posted On: {{n.created_on}}</p>
+                  {% endif %}
+                  <a href="{% url 'cur_assignment_create' a.pk %}" class="read-more1"><span>Peers <i
+                        class="fa fa-graduation-cap"></i></span></a>
                 </div>
               </div>
-              {% endfor %} -->
-        </div>
-      </div>
-    </div>
-  </div>
+              {% endfor %}
 
-
-
-  <script>
-    let num = 0;
-
-    function showform(num) {
-      if (num == 1) {
-        if (document.getElementById('create1').style.visibility == 'visible') {
-          document.getElementById('create1').style.visibility = 'hidden';
-          document.getElementById('create2').style.visibility = 'hidden';
-          document.getElementById('createnotice').style.visibility = 'hidden';
-        } else {
-          document.getElementById('create1').style.visibility = 'visible';
-          document.getElementById('create2').style.visibility = 'hidden';
-          document.getElementById('createnotice').style.visibility = 'hidden';
-        }
-      }
-
-      if (num == 3) {
-        if (document.getElementById('createnotice').style.visibility == 'visible') {
-          document.getElementById('createnotice').style.visibility = 'hidden';
-          document.getElementById('create1').style.visibility = 'hidden';
-          document.getElementById('create2').style.visibility = 'hidden';
-
-        } else {
-          document.getElementById('createnotice').style.visibility = 'visible';
-          document.getElementById('create1').style.visibility = 'hidden';
-          document.getElementById('create2').style.visibility = 'hidden';
-
-        }
-      }
-
-      if (num == 2) {
-        if (document.getElementById('create2').style.visibility == 'visible') {
-          document.getElementById('create2').style.visibility = 'hidden';
-          document.getElementById('create1').style.visibility = 'hidden';
-          document.getElementById('createnotice').style.visibility = 'hidden';
-        } else {
-          document.getElementById('create2').style.visibility = 'visible';
-          document.getElementById('create1').style.visibility = 'hidden';
-          document.getElementById('createnotice').style.visibility = 'hidden';
-        }
-      }
-
-    }
-
-
-    function toggleStudents() {
-      var button = document.getElementById("table-toggle");
-      var table = document.getElementById("table-container");
-
-      if (table.style.display === "none") {
-        table.style.display = "block";
-        button.innerHTML = "Hide Students";
-      } else {
-        table.style.display = "none";
-        button.innerHTML = "Show Students";
-      }
-    }
-  </script>
-
-  <!--------------------------------COPY START  ---------------------------------->
-
-  <!--? Footer Start-->
-  <footer>
-    <div class="footer-area footer-bg">
-      <div class="container">
-        <div class="footer-top py-5">
-          <div class="footer-heading">
-            <h4 style="color: white; padding: 10px 0; text-align: center;">Connect Us</h4>
-            <div class="footer-social py-2" style="text-align: center;">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-youtube"></i></a>
-              <a href="#"><i class="fab fa-linkedin"></i></a>
-              <a href="#"><i class="fas fa-envelope"></i></a>
-            </div>
-
-            <div class="address py-3" style="text-align: center;">
-              <h5 style="color: white;"><i class="ti-home px-2"></i>K J Somaiya College of Engineering</h5>
+              <!-- {% for n in notice %}
+          <!--    <div class="single-cat float-left"-->
+              <!--      style="width: 30%; margin: 0px 0px 20px 30px; padding: 10px; height: 350px">-->
+              <!--      <div style="text-align: center;" class="cat-icon mb-3"><a href="{% url 'cur_notice' n.pk %}">-->
+              <!--          <span class="flaticon-web-design"></span></a>-->
+              <!--      </div>-->
+              <!--      <div style="text-align: center;" class="cat-cap">-->
+              <!--        <h5 style="text-transform: uppercase; text-decoration: underline;"><a-->
+              <!--            href="{% url 'cur_notice' n.pk %}">{{n.notice_name}}</a></h5>-->
+              <!--        <p style="margin-bottom: 15px;">Posted On: {{n.created_on}}</p>-->
+              <!--      </div>-->
+              <!--    </div>-->
+              <!--    {% endfor %} -->
             </div>
           </div>
         </div>
-  </footer>
-  <!-- Scroll Up -->
-  <div id="back-top">
-    <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
-  </div>
-  <!-- JS here -->
+      </div>
 
-  <script src="{% static './assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
-  <!-- Jquery, Popper, Bootstrap -->
-  <script src="{% static './assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
-  <script src="{% static './assets/js/popper.min.js' %}"></script>
-  <script src="{% static './assets/js/bootstrap.min.js' %}"></script>
-  <!-- Jquery Mobile Menu -->
-  <script src="{% static './assets/js/jquery.slicknav.min.js' %}"></script>
 
-  <!-- Jquery Slick , Owl-Carousel Plugins -->
-  <script src="{% static './assets/js/owl.carousel.min.js' %}"></script>
-  <script src="{% static './assets/js/slick.min.js' %}"></script>
-  <!-- One Page, Animated-HeadLin -->
-  <script src="{% static './assets/js/wow.min.js' %}"></script>
-  <script src="{% static './assets/js/animated.headline.js' %}"></script>
-  <script src="{% static './assets/js/jquery.magnific-popup.js' %}"></script>
 
-  <!-- Date Picker -->
-  <script src="{% static './assets/js/gijgo.min.js' %}"></script>
-  <!-- Nice-select, sticky -->
-  <script src="{% static './assets/js/jquery.nice-select.min.js' %}"></script>
-  <script src="{% static './assets/js/jquery.sticky.js' %}"></script>
+      <!-- <script src="./jav.js"></script> -->
+      <script>
+        let num = 0;
 
-  <!-- counter , waypoint -->
-  <script src="{% static './assets/js/jquery.counterup.min.js' %}"></script>
-  <script src="{% static './assets/js/waypoints.min.js' %}"></script>
+        function showform(num) {
+          if (num == 1) {
+            if (document.getElementById('create1').style.visibility == 'visible') {
+              document.getElementById('create1').style.visibility = 'hidden';
+              document.getElementById('create2').style.visibility = 'hidden';
+              document.getElementById('createnotice').style.visibility = 'hidden';
+              // document.getElementById('create5').style.visibility = 'hidden';
+              // document.getElementById('create4').style.visibility = 'hidden';
+            } else {
+              document.getElementById('create1').style.visibility = 'visible';
+              document.getElementById('create2').style.visibility = 'hidden';
+              document.getElementById('createnotice').style.visibility = 'hidden';
+              // document.getElementById('create5').style.visibility = 'hidden';
+              // document.getElementById('create4').style.visibility = 'hidden';
+            }
+          }
 
-  <!-- contact js -->
-  <script src="{% static './assets/js/contact.js' %}"></script>
-  <script src="{% static './assets/js/jquery.form.js' %}"></script>
-  <script src="{% static './assets/js/jquery.validate.min.js' %}"></script>
-  <script src="{% static './assets/js/mail-script.js' %}"></script>
-  <script src="{% static './assets/js/jquery.ajaxchimp.min.js' %}"></script>
+          if (num == 3) {
+            if (document.getElementById('createnotice').style.visibility == 'visible') {
+              document.getElementById('createnotice').style.visibility = 'hidden';
+              document.getElementById('create1').style.visibility = 'hidden';
+              document.getElementById('create2').style.visibility = 'hidden';
+              // document.getElementById('create5').style.visibility = 'hidden';
+              // document.getElementById('create4').style.visibility = 'hidden';
+            } else {
+              document.getElementById('createnotice').style.visibility = 'visible';
+              document.getElementById('create1').style.visibility = 'hidden';
+              document.getElementById('create2').style.visibility = 'hidden';
+              // document.getElementById('create5').style.visibility = 'hidden';
+              // document.getElementById('create4').style.visibility = 'hidden';
+            }
+          }
 
-  <!-- Jquery Plugins, main Jquery -->
-  <script src="{% static './assets/js/plugins.js' %}"></script>
-  <!-- <script src="{% static './assets/js/main.js' %}"></script>
+          if (num == 2) {
+            if (document.getElementById('create2').style.visibility == 'visible') {
+              document.getElementById('create2').style.visibility = 'hidden';
+              document.getElementById('create1').style.visibility = 'hidden';
+              document.getElementById('createnotice').style.visibility = 'hidden';
+              // document.getElementById('create5').style.visibility = 'hidden';
+              // document.getElementById('create4').style.visibility = 'hidden';
+            } else {
+              document.getElementById('create2').style.visibility = 'visible';
+              document.getElementById('create1').style.visibility = 'hidden';
+              document.getElementById('createnotice').style.visibility = 'hidden';
+              // document.getElementById('create5').style.visibility = 'hidden';
+              // document.getElementById('create4').style.visibility = 'hidden';
+            }
+          }
+        }
+
+
+        function toggleStudents() {
+          var button = document.getElementById("table-toggle");
+          var table = document.getElementById("table-container");
+
+          if (table.style.display === "none") {
+            table.style.display = "block";
+            button.innerHTML = "Hide Students";
+          } else {
+            table.style.display = "none";
+            button.innerHTML = "Show Students";
+          }
+        }
+      </script>
+
+      <!--------------------------------COPY START  ---------------------------------->
+
+      <!--? Footer Start-->
+      <footer>
+        <div class="footer-area footer-bg">
+          <div class="container">
+            <div class="footer-top">
+              <div class="footer-heading">
+                <h4 style="color: white; padding: 10px 0; text-align: center;">Connect Us</h4>
+                <div class="footer-social py-2" style="text-align: center;">
+                  <a href="#"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#"><i class="fab fa-instagram"></i></a>
+                  <a href="#"><i class="fab fa-youtube"></i></a>
+                  <a href="#"><i class="fab fa-linkedin"></i></a>
+                  <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+
+                <div class="address py-3" style="text-align: center;">
+                  <h5 style="color: white;"><i class="ti-home px-2"></i>K J Somaiya College of Engineering</h5>
+                </div>
+              </div>
+            </div>
+      </footer>
+      <!-- Scroll Up -->
+      <div id="back-top">
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+      </div>
+      <!-- JS here -->
+
+      <script src="{% static './assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+      <!-- Jquery, Popper, Bootstrap -->
+      <script src="{% static './assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+      <script src="{% static './assets/js/popper.min.js' %}"></script>
+      <script src="{% static './assets/js/bootstrap.min.js' %}"></script>
+      <!-- Jquery Mobile Menu -->
+      <script src="{% static './assets/js/jquery.slicknav.min.js' %}"></script>
+
+      <!-- Jquery Slick , Owl-Carousel Plugins -->
+      <script src="{% static './assets/js/owl.carousel.min.js' %}"></script>
+      <script src="{% static './assets/js/slick.min.js' %}"></script>
+      <!-- One Page, Animated-HeadLin -->
+      <script src="{% static './assets/js/wow.min.js' %}"></script>
+      <script src="{% static './assets/js/animated.headline.js' %}"></script>
+      <script src="{% static './assets/js/jquery.magnific-popup.js' %}"></script>
+
+      <!-- Date Picker -->
+      <script src="{% static './assets/js/gijgo.min.js' %}"></script>
+      <!-- Nice-select, sticky -->
+      <script src="{% static './assets/js/jquery.nice-select.min.js' %}"></script>
+      <script src="{% static './assets/js/jquery.sticky.js' %}"></script>
+
+      <!-- counter , waypoint -->
+      <script src="{% static './assets/js/jquery.counterup.min.js' %}"></script>
+      <script src="{% static './assets/js/waypoints.min.js' %}"></script>
+
+      <!-- contact js -->
+      <script src="{% static './assets/js/contact.js' %}"></script>
+      <script src="{% static './assets/js/jquery.form.js' %}"></script>
+      <script src="{% static './assets/js/jquery.validate.min.js' %}"></script>
+      <script src="{% static './assets/js/mail-script.js' %}"></script>
+      <script src="{% static './assets/js/jquery.ajaxchimp.min.js' %}"></script>
+
+      <!-- Jquery Plugins, main Jquery -->
+      <script src="{% static './assets/js/plugins.js' %}"></script>
+      <!-- <script src="{% static './assets/js/main.js' %}"></script>
   <script src="{% static './assets/js/jquery-3.3.1.min.js' %}"></script>
   <script src="{% static './assets/js/popper.min.js' %}"></script>
   <script src="{% static './assets/js/owl.carousel.min.js' %}"></script>
   <script src="{% static './assets/js/main.js' %}"></script> -->
 
 
-  <script>
-    $(document).ready(function () {
-      $('.sidebarCollapse').on('click', function () {
-        console.log("Hello");
-        $('#sidebar').toggleClass('active');
+      <script>
+        $(document).ready(function () {
+          $('.sidebarCollapse').on('click', function () {
+            console.log("Hello");
+            $('#sidebar').toggleClass('active');
 
-      });
-      const elements = document.getElementsByClassName('avatar');
-      for (let i = 0; i < elements.length; i++) {
-        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-        elements[i].style.backgroundColor = "#" + randomColor;
-      }
-    });
-  </script>
+          });
+          const elements = document.getElementsByClassName('avatar');
+          for (let i = 0; i < elements.length; i++) {
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            elements[i].style.backgroundColor = "#" + randomColor;
+          }
+        });
+      </script>
 
 
-  </div>
+    </div>
   </div>
 </body>
 

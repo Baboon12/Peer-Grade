@@ -15,6 +15,7 @@ from django.forms.models import model_to_dict
 import csv
 from django.conf import settings
 
+# from courses.models import Assignments, CreatedClasses, JoinedClasses,Submission
 
 # Create your views here.
 
@@ -37,6 +38,12 @@ def signup(request):
 def index(request):
     return render(request, 'courses/index.html', {'title': 'Peer2Peer-Grading: Home'})
 
+def out_about(request):
+    context = {
+        'title': 'Peer2Peer-Grading: About',
+    }
+    return render(request, 'courses/about.html', context)
+    
 
 def about(request):
     
@@ -190,7 +197,6 @@ def cur_class(request, class_id):
                 if assignment is not None:
                     pass
                 else:
-
                     teacher_ratio = int(data['tratio'])
                     student_ratio = 100 - teacher_ratio
                     no_of_peers = int(data['no_of_peers'])
@@ -315,8 +321,11 @@ def cur_class(request, class_id):
 
 
 def assign_peers(request, class_id, assignment_id):
+    cur_user = request.user
     current_class = CreatedClasses.objects.get(pk=class_id)
     total_students = len(JoinedClasses.objects.filter(class_id=current_class))
+    all_classes = CreatedClasses.objects.filter(teacher=cur_user)
+    joined_classes = JoinedClasses.objects.filter(student=cur_user)
     if current_class.teacher != request.user:
         return render(request, 'courses/access_denied.html')
     peer = {}
@@ -356,6 +365,8 @@ def assign_peers(request, class_id, assignment_id):
         context = {
             'peers': obj,
             'cur_assignment': cur_assignment,
+            'classes':all_classes,
+            'joined':joined_classes
         }
     return render(request, 'courses/assign_peers.html', context)
 
@@ -482,11 +493,6 @@ def join_cur_class(request, class_id):
             
             # "joined":classes
         }
-
-        
-
-
-
         return render(request, 'courses/join_cur_class.html', context)
     else:
         return render(request, 'courses/access_denied.html')
@@ -1005,6 +1011,11 @@ def view_feedback(request, assignment_id):
 
 @login_required
 def cur_assignment_gradesheet(request, assignment_id):
+    current_user = request.user
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
+    #joined_classes = JoinedClasses.objects.filter(student=current_user)
+    
 
     current_assignment = Assignments.objects.get(pk=assignment_id)
     created_class = CreatedClasses.objects.filter(
@@ -1139,6 +1150,8 @@ def cur_assignment_gradesheet(request, assignment_id):
                         #     avg_peer_marks = round(average(peer_marks), 1)
 
                         context = {
+                            'classes':all_classes,
+                            'joined':joined_classes,
                             'username': student.username,
                             'email': student.email,
                             # 'name': student.name,
@@ -1150,6 +1163,8 @@ def cur_assignment_gradesheet(request, assignment_id):
                             'peer_marks': peer_marks,
                             'avg_peer_marks': avg_peer_marks,
                             "iterator": range(1, no_peers+1),
+                            # 'classes': all_classes,
+                            # 'joined':joined_classes,
                         }
 
                         entry.append(context)
@@ -1173,6 +1188,8 @@ def cur_assignment_gradesheet(request, assignment_id):
 
                             # 'count': count,
                             # 'no_peers': no_peers,
+                            # 'classes': all_classes,
+                            # 'joined':joined_classes,
                         }
 
                         # print(context)
@@ -1187,21 +1204,232 @@ def cur_assignment_gradesheet(request, assignment_id):
                         'marks': marks,
                         # 'count': count,
                         # 'no_peers': no_peers,
+                        # 'classes': all_classes,
+                        # 'joined':joined_classes,
                     }
                     # print(context)
                     entry.append(context)
 
         finalContext = {
+            
             "class": current,
             "assignment": current_assignment,
             "t_points": current_assignment.points,
             "no_peers": current_assignment.no_of_peers,
             "iterator": range(1, current_assignment.no_of_peers+1) if current_assignment.no_of_peers is not None else None,
             "entries": entry,
+            'classes': all_classes,
+            'joined':joined_classes,
         }
         return render(request, 'courses/gradesheet.html', finalContext)
     else:
         return render(request, "courses/access_denied.html")
+    
+
+    
+# @login_required
+# def cur_assignment_gradesheet(request, assignment_id):
+#     current_user = request.user
+#     current_assignment = Assignments.objects.get(pk=assignment_id)
+#     created_class = CreatedClasses.objects.filter(
+#         pk=current_assignment.class_id.pk).first()
+#     all_class = CreatedClasses.objects.filter(
+#         class_code=created_class.class_code)
+#     flag = 0
+#     for c in all_class:
+#         if c.teacher.username == request.user.username:
+#             flag = 1
+#             break
+
+#     if(flag == 1):
+#         current = None
+#         for c in all_class:
+#             current = c
+#         students = JoinedClasses.objects.filter(
+#             class_id=current).values('student')
+#         students_list = [User.objects.get(id=c['student'])
+#                          for i, c in enumerate(students)]
+#         entry = []
+
+#         for i, student in enumerate(students_list):
+#             try:
+#                 current_sub = Submission.objects.get(
+#                     assignment_id=current_assignment, student=student)
+#                 # print("Before Current Sub")
+#                 # print(current_sub)
+#             except Submission.DoesNotExist:
+#                 current_sub = None
+
+#             if(not current_sub):
+#                 # print(current_sub)
+#                 context = {
+#                     "username": student.username,
+#                     "email": student.email,
+#                 }
+#                 entry.append(context)
+
+#             else:
+#                 samp_class = CreatedClasses.objects.filter(
+#                     pk=current_sub.assignment_id.class_id.pk).first()
+
+#                 all_classes = CreatedClasses.objects.filter(
+#                     class_code=samp_class.class_code)
+
+#                 flag = 0
+#                 for c in all_classes:
+#                     if c.teacher.username == request.user.username:
+#                         flag = 1
+#                         break
+#                 if flag == 0:
+#                     return render(request, 'courses/access_denied.html')
+
+#                 student_name = current_sub.student.username
+#                 cur_student = User.objects.get(username=student_name)
+#                 cur_assignment = current_sub.assignment_id.pk
+#                 current_assignment = Assignments.objects.get(
+#                     pk=cur_assignment)
+#                 no_peers = current_assignment.no_of_peers
+#                 sub = Submission.objects.filter(student=cur_student).filter(
+#                     assignment_id=current_assignment).first()
+#                 # print("Above Sub")
+#                 # print(Submission.objects.filter(student=cur_student).filter(
+#                 #     assignment_id=current_assignment)[0])
+
+#                 s_ratio = current_assignment.student_ratio
+#                 t_ratio = current_assignment.teacher_ratio
+
+#                 if current_assignment.grading_type is False:
+#                     peer_marks = []
+#                     marks = 0
+#                     total_marks = None
+
+#                     context = None
+#                     peer = AssignedPeers.objects.filter(
+#                         assignment=current_assignment).filter(peer=cur_student)
+#                     if len(peer) == 0:
+#                         peer = peer.first()
+#                     if peer is not None:
+#                         for p in peer:
+#                             temp = p.student_marks
+#                             peer_marks.append(temp)
+#                         teacher_marks = None
+#                         if sub is not None:
+#                             if sub.marks is not None:
+#                                 teacher_marks = sub.marks
+
+#                         avg_marks = None
+#                         if len(peer_marks) != 0:
+#                             count = 0
+#                             for i in peer_marks:
+#                                 if i is not None:
+#                                     count += 1
+#                             # if count != 0 and count == no_peers:
+#                             if count != 0:
+
+#                                 for i in peer_marks:
+#                                     if(i is not None):
+#                                         marks = marks+i
+#                                     # print(marks)
+#                                 marks = float(marks)/count
+#                                 avg_marks = marks
+#                                 marks = marks*(s_ratio/100)
+#                                 if teacher_marks is not None:
+#                                     total_marks = (
+#                                         teacher_marks*(t_ratio/100))+marks
+
+#                         if teacher_marks is not None:
+#                             teacher_marks = round(teacher_marks, 1)
+#                         if total_marks is not None:
+#                             total_marks = round(total_marks, 1)
+
+#                         # print("Count "+str(count))
+#                         # print("Teacher Marks "+str(teacher_marks))
+#                         # print("Total Marks "+str(total_marks))
+#                         # print("Average Marks "+str(avg_marks))
+#                         if(avg_marks != None):
+#                             avg_peer_marks = round(avg_marks, 1)
+#                         else:
+#                             avg_peer_marks = None
+#                         # isNone = False
+
+#                         # for marks in peer_marks:
+#                         #     if marks is None:
+#                         #         isNone = True
+#                         #         break
+
+#                         # if isNone:
+#                         #     avg_peer_marks = None
+#                         # else:
+#                         #     avg_peer_marks = round(average(peer_marks), 1)
+
+#                         context = {
+#                             'username': student.username,
+#                             'email': student.email,
+#                             'name': student.name,
+#                             'current_sub': current_sub,
+#                             'marks': round(marks, 1) if marks is not None else None,
+#                             'teacher_marks': teacher_marks,
+#                             'teacher_marks': teacher_marks,
+#                             'total_marks': total_marks,
+#                             'peer_marks': peer_marks,
+#                             'avg_peer_marks': avg_peer_marks,
+#                             "iterator": range(1, no_peers+1),
+#                         }
+
+#                         entry.append(context)
+
+#                         # print(context)
+
+#                         # print(teacher_marks)
+#                     else:
+#                         if sub is not None:
+#                             if sub.marks is not None:
+#                                 teacher_marks = sub.marks
+#                         marks = "No peers Assigned"
+#                         context = {
+#                             'username': student.username,
+#                             'email': student.email,
+
+#                             # 'current_sub': current_sub,
+#                             'marks': marks,
+#                             'teacher_marks': teacher_marks,
+#                             # 'total_marks': current_assignment.points,
+
+#                             # 'count': count,
+#                             # 'no_peers': no_peers,
+#                         }
+
+#                         # print(context)
+#                         entry.append(context)
+
+#                 else:
+#                     marks = "No peergrading"
+#                     context = {
+#                         'username': student.username,
+#                         'email': student.email,
+#                         # 'current_sub': current_sub,
+#                         'marks': marks,
+#                         # 'count': count,
+#                         # 'no_peers': no_peers,
+#                     }
+#                     # print(context)
+#                     entry.append(context)
+
+#         all_classes = CreatedClasses.objects.filter(teacher=current_user)
+#         joined_classes = JoinedClasses.objects.filter(student=current_user)
+#         finalContext = {
+#             "class": current,
+#             "assignment": current_assignment,
+#             "t_points": current_assignment.points,
+#             "no_peers": current_assignment.no_of_peers,
+#             "iterator": range(1, current_assignment.no_of_peers+1) if current_assignment.no_of_peers is not None else None,
+#             "entries": entry,
+#             'classes': all_classes,
+#             'joined':joined_classes,
+#         }
+#         return render(request, 'courses/gradesheet.html', finalContext)
+#     else:
+#         return render(request, "courses/access_denied.html")
 
 @login_required
 def nav(request):
@@ -1246,7 +1474,6 @@ def cur_assignment_create(request, assignment_id):
     if flag == 1:
         submission_list = Submission.objects.filter(
             assignment_id=current_assignment)
-
         print("In create assignment")
         current = None
         for c in all_class:
@@ -1254,12 +1481,12 @@ def cur_assignment_create(request, assignment_id):
         all_classes = CreatedClasses.objects.filter(teacher=current_user)
         joined_classes = JoinedClasses.objects.filter(student=current_user)
         context = {
-            'assignment': current_assignment,
-            'submissions': submission_list,
-            'assignment_id': assignment_id,
-            'teacher_ratio': teacher_ratio,
-            'classes': all_classes,
-            'joined':joined_classes
+            'assignment' : current_assignment,
+            'submissions' : submission_list,
+            'assignment_id' : assignment_id,
+            'teacher_ratio' : teacher_ratio,
+            'classes' : all_classes,
+            'joined' : joined_classes
         }
         return render(request, 'courses/create_cur_assignment.html', context)
     else:
@@ -1268,7 +1495,9 @@ def cur_assignment_create(request, assignment_id):
 
 @login_required
 def cur_student_submission(request, submission_id):
-
+    current_user = request.user
+    all_classes = CreatedClasses.objects.filter(teacher=current_user)
+    joined_classes = JoinedClasses.objects.filter(student=current_user)
     current_sub = Submission.objects.get(pk=submission_id)
     print(current_sub)
     samp_class = CreatedClasses.objects.filter(
@@ -1394,6 +1623,8 @@ def cur_student_submission(request, submission_id):
                 'no_peers': no_peers,
                 'peer_marks': peer_marks,
                 'avg_peer_marks': avg_peer_marks,
+                'classes' : all_classes,
+                'joined' : joined_classes
             }
             # print(teacher_marks)
         else:
@@ -1413,6 +1644,8 @@ def cur_student_submission(request, submission_id):
                 't_points': t_points,
                 # 'count': count,
                 # 'no_peers': no_peers,
+                'classes' : all_classes,
+                'joined' : joined_classes
             }
             # print(teacher_marks)
     else:
@@ -1427,12 +1660,15 @@ def cur_student_submission(request, submission_id):
             't_points': t_points,
             # 'count': count,
             # 'no_peers': no_peers,
+            'classes' : all_classes,
+            'joined' : joined_classes
         }
 
     return render(request, 'courses/cur_student_submission.html', context)
 
 
 def cur_peer_submission(request, submission_id):
+    cur_user = request.user
     current_sub = Submission.objects.get(pk=submission_id)
     student = current_sub.student
     if AssignedPeers.objects.filter(peer=student).filter(teacher=request.user).first() == None:
@@ -1449,12 +1685,16 @@ def cur_peer_submission(request, submission_id):
             tmp = link.doc_link
         embed_url = temp
         embd_url = tmp
+    all_classes = CreatedClasses.objects.filter(teacher=cur_user)
+    joined_classes = JoinedClasses.objects.filter(student=cur_user)
 
     context = {
         'current_sub': current_sub,
         'files': submitted_files,
         'submitted_link': embed_url,
-        'submitted_doc_link': embd_url
+        'submitted_doc_link': embd_url,
+        'classes':all_classes,
+        'joined':joined_classes
     }
     return render(request, 'courses/cur_peer_submission.html', context)
 
@@ -1462,6 +1702,8 @@ def cur_peer_submission(request, submission_id):
 def peers_assigned(request, assignment_id):
 
     cur_user = request.user
+    all_classes = CreatedClasses.objects.filter(teacher=cur_user)
+    joined_classes = JoinedClasses.objects.filter(student=cur_user)
     current_assignment = Assignments.objects.get(pk=assignment_id)
 
     print(current_assignment)
@@ -1493,8 +1735,10 @@ def peers_assigned(request, assignment_id):
     context = {
         'assignment': current_assignment,
         'submissions': peer_sub,
+        'classes':all_classes,
+        'joined':joined_classes
     }
-    print(context)
+    #print(context)
     return render(request, 'courses/peers_assigned.html', context)
 
 

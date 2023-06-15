@@ -580,7 +580,7 @@ hr {
 .sticky-bar {
     left: 0;
     margin: auto;
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     width: 100%;
     -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
@@ -3849,11 +3849,11 @@ hr {
 }
 
 .footer-area {
-    background: #0b0b1d
+    background:#6560ab;
 }
 
 .footer-area .footer-heading {
-    padding-bottom: 70px
+    /* padding-bottom: 70px */
 }
 
 .footer-area .footer-heading .footer-tittle2 h4 {

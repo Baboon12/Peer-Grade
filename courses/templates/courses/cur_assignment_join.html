@@ -373,7 +373,7 @@
         <!-- Header End -->
       </header>
       <hr>
-      <div class="container-fluid">
+      <div class="">
         <div class="row-content row">
           <div class="offset-md-2 col-sm-12 col-md-8">
             <div style="display: flex;justify-content:space-between ;">
@@ -487,8 +487,6 @@
           </div>
           {% endif %}
 
-
-          <!-------------------------------- Comment Section -------------------------------->
           <div class='comments'>
             {% if sub %}
             <form method="post" action="{% url 'cur_assignment_join' a.pk %}" class='commentform'>
@@ -511,7 +509,6 @@
           </div>
         </div>
 
-</body>
 <!-- <footer>
   <div class="footer-area footer-bg">
     <div class="container">
@@ -535,7 +532,7 @@
 <footer>
   <div class="footer-area footer-bg">
     <div class="container">
-      <div class="footer-top py-5">
+      <div class="footer-top">
         <div class="footer-heading">
           <h4 style="color: white; padding: 10px 0; text-align: center;">Connect Us</h4>
           <div class="footer-social py-2" style="text-align: center;">
@@ -545,18 +542,18 @@
             <a href="#"><i class="fab fa-linkedin"></i></a>
             <a href="#"><i class="fas fa-envelope"></i></a>
           </div>
-
           <div class="address py-3" style="text-align: center;">
             <h5 style="color: white;"><i class="ti-home px-2"></i>K J Somaiya College of Engineering</h5>
           </div>
         </div>
       </div>
-    </div>  
+    </div>
   </div>
 </footer>
 
 <div id="back-top">
   <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+</div>
 </div>
 </div>
 </div>
@@ -603,6 +600,6 @@
 <!-- Jquery Plugins, main Jquery -->
 <script src="{% static './assets/js/plugins.js' %}"></script>
 <script src="{% static './assets/js/main.js' %}"></script>
-
+</body>
 </html>
 {% endblock %}

@@ -575,7 +575,7 @@ hr {
 .sticky-bar {
     left: 0;
     margin: auto;
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     width: 100%;
     -webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
@@ -2503,7 +2503,7 @@ hr {
 
 @media (max-width: 575px) {
     .header-area {
-        box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1)
+        box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
     }
 }
 
